@@ -40,7 +40,7 @@ const InventoryForm = ({ isOpen, onClose, onSubmit, item, setInventory }) => {
   const handleAdd = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/inventory", formData);
+      const response = await axios.post("https://inventory-management-system-backend-4.onrender.com/api/inventory", formData);
       setInventory((prev) => [...prev, response.data]);
       console.log("Item added:", response.data);
       onClose();

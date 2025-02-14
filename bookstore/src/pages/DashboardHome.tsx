@@ -50,7 +50,7 @@ const DashboardHome = () => {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/inventory");
+        const response = await axios.get("https://inventory-management-system-backend-4.onrender.com/api/inventory");
         console.log("Response:", response.data.data);
         setInventory(response.data.data); // ✅ Update state with fetched data
       } catch (error) {
@@ -100,7 +100,7 @@ const DashboardHome = () => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
   
     try {
-      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      await axios.delete(`https://inventory-management-system-backend-4.onrender.com/api/inventory/${id}`);
       setInventory(inventory.filter((item) => item._id !== id)); // Update state after deletion
     } catch (error) {
       console.error("Error deleting item:", error);

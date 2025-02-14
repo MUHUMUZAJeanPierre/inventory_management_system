@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEye, FaEdit, FaTrash, FaTools, FaUndo, FaPlus } from "react-icons/fa";
 import InventoryForm from "../components/InventoryForm"; // New Form Component for Adding/Editing Items
+import axios from "axios";
 
 const initialInventoryData = [
   {
@@ -37,27 +38,42 @@ const initialInventoryData = [
   },
 ];
 
-const itemsPerPage = 3;
+const itemsPerPage = 4;
 
 const DashboardHome = () => {
-  const [inventory, setInventory] = useState(initialInventoryData);
+
+
+  const [inventory, setInventory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-
+  useEffect(() => {
+    const fetchInventory = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/inventory");
+        console.log("Response:", response.data.data);
+        setInventory(response.data.data); // ✅ Update state with fetched data
+      } catch (error) {
+        console.error("Error fetching inventory:", error);
+      }
+    };
+  
+    fetchInventory();
+  }, []);
+  
   const totalPages = Math.ceil(inventory.length / itemsPerPage);
   const paginatedData = inventory.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
+  
   const openCreateForm = () => {
     setEditingItem(null);
     setIsFormOpen(true);
   };
-
+  
   const openEditForm = (item) => {
     setEditingItem(item);
     setIsFormOpen(true);
   };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -78,6 +94,20 @@ const DashboardHome = () => {
 
     setIsFormOpen(false);
   };
+  
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this item?")) return;
+  
+    try {
+      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      setInventory(inventory.filter((item) => item._id !== id)); // Update state after deletion
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+  
+  
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -130,11 +160,11 @@ const DashboardHome = () => {
                     </button>
                   ) : item.status === "Overdue" ? (
                     <button className="text-red-500 hover:text-red-700">
-                      <FaUndo /> {/* Return */}
+                      <FaUndo /> Return
                     </button>
                   ) : null}
-                  <button className="text-red-500 hover:text-red-700">
-                    <FaTrash />
+                  <button  onClick={() => handleDelete(item._id)} className="text-red-500 hover:text-red-700">
+                    <FaTrash  />
                   </button>
                 </td>
               </tr>

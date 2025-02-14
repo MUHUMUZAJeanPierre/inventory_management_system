@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.6",
-    "@tailwindcss/vite": "^4.0.6",
+    "@tailwindcss/vite": "^4.0.5",
+    "axios": "^1.7.9",
     "bookstore": "file:",
     "bootstrap": "^5.3.3",
     "react": "^19.0.0",

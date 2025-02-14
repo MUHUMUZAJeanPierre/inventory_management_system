@@ -33,10 +33,9 @@
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import About from "./pages/About";
 import DashboardHome from "./pages/DashboardHome";
-import Home from "./pages/Home";
 import DashboardAbout from "./pages/DashboardAbout";
+import InventoryForm from "./components/InventoryForm";
 
 
 function App() {
@@ -46,6 +45,7 @@ function App() {
         <Routes>
           <Route path="/" element={<DashboardHome />} />
           <Route path="/about" element={<DashboardAbout />} />
+          <Route path="/" element={<InventoryForm />} />
           {/* <Route path="/courses" element={<Home />} /> */}
         </Routes>
       </Layout>

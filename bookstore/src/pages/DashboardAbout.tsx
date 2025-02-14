@@ -46,14 +46,15 @@ const inventoryStats = [
 
 const DashboardAbout = () => {
   return (
-    <div className="header bg-gradient-to-r from-indigo-500 to-blue-700 text-white mx-auto px-6 py-8 rounded-lg">
+    <div className="header bg-gradient-to-r from-indigo-500 to-blue-700 text-white mx-auto px-4 py-8 rounded-lg">
       <Container fluid>
         <div className="header-body">
-          <Row className="flex flex-wrap justify-center gap-6">
+          {/* Responsive Grid Layout */}
+          <Row className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
             {inventoryStats.map((stat, index) => (
               <Card
                 key={index}
-                className="shadow-md transition duration-300 hover:scale-105 border-0 rounded-lg w-64 bg-white dark:bg-gray-900"
+                className="shadow-md transition duration-300 hover:scale-105 border-0 rounded-lg bg-white dark:bg-gray-900"
               >
                 <CardBody className="p-4 flex items-center space-x-4">
                   <div

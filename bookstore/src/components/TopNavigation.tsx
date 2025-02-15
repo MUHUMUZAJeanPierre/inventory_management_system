@@ -1,30 +1,38 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBars, FaSearch, FaUser } from "react-icons/fa";
 
-const TopNavigation = ({ toggleSidebar }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+interface TopNavigationProps {
+  toggleSidebar: () => void;
+}
+
+const TopNavigation: React.FC<TopNavigationProps> = ({ toggleSidebar }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.target.closest(".user-dropdown")) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!(event.target as HTMLElement).closest(".user-dropdown")) {
         setIsDropdownOpen(false);
       }
     };
+
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   return (
     <header className="w-full fixed top-0 left-0 bg-white dark:bg-gray-900 shadow-md px-4 py-3 flex justify-between items-center z-50 md:w-[83%] md:left-[17%] transition-all">
-
+      
+      {/* Sidebar Toggle Button */}
       <button onClick={toggleSidebar} className="md:hidden text-xl text-gray-600 dark:text-white">
         <FaBars />
       </button>
 
+      {/* Brand Name */}
       <a href="/" className="text-2xl font-bold text-gray-800 dark:text-white">
         SkillHive
       </a>
 
+      {/* Search Bar */}
       <div className="hidden md:flex items-center relative">
         <input
           type="text"
@@ -36,10 +44,11 @@ const TopNavigation = ({ toggleSidebar }) => {
         </button>
       </div>
 
+      {/* User Profile Dropdown */}
       <div className="flex space-x-4 relative">
         <div className="relative user-dropdown">
           <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            onClick={() => setIsDropdownOpen((prev) => !prev)}
             className="text-xl text-gray-600 dark:text-white"
           >
             <FaUser />

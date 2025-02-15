@@ -5,7 +5,19 @@ import {
   FaGraduationCap, FaChalkboardTeacher, FaHeadset, FaUserCog
 } from "react-icons/fa";
 
-const Sidebar = ({ user }) => {
+// Define user prop types
+interface User {
+  name?: string;
+  role?: "student" | "teacher" | "admin" | "visitor";
+  profilePic?: string;
+}
+
+// Define Sidebar Props
+interface SidebarProps {
+  user?: User;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ user }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const menuItems = [

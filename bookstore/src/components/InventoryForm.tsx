@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 interface InventoryItem {
@@ -16,12 +15,11 @@ interface InventoryItem {
 interface InventoryFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (item: InventoryItem) => void;
   item: InventoryItem | null;
   setInventory: React.Dispatch<React.SetStateAction<InventoryItem[]>>;
 }
 
-const InventoryForm: React.FC<InventoryFormProps> = ({ isOpen, onClose, onSubmit, item, setInventory }) => {
+const InventoryForm: React.FC<InventoryFormProps> = ({ isOpen, onClose, item, setInventory }) => {
   const [formData, setFormData] = useState<InventoryItem>({
     name: "",
     status: "Available",
@@ -29,26 +27,15 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ isOpen, onClose, onSubmit
     borrower: "",
     dueDate: "",
   });
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (item) {
-      setFormData({
-        name: item.name || "",
-        status: item.status || "Available",
-        condition: item.condition || "New",
-        borrower: item.borrower || "",
-        dueDate: item.dueDate || "",
-      });
-    } else {
-      setFormData({
-        name: "",
-        status: "Available",
-        condition: "New",
-        borrower: "",
-        dueDate: "",
-      });
-    }
+    setFormData({
+      name: item?.name || "",
+      status: item?.status || "Available",
+      condition: item?.condition || "New",
+      borrower: item?.borrower || "",
+      dueDate: item?.dueDate || "",
+    });
   }, [item]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -59,9 +46,13 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ isOpen, onClose, onSubmit
     e.preventDefault();
     try {
       const response = await axios.post("https://inventory-management-system-backend-6.onrender.com/api/inventory", formData);
-      setInventory((prev) => [...prev, response.data]);
-      toast.success("Inventory item added successfully!");
-      onClose();
+      if (response.data && response.data._id) {
+        setInventory((prev) => [...prev, response.data]);
+        toast.success("Inventory item added successfully!");
+        onClose();
+      } else {
+        throw new Error("Invalid response data");
+      }
     } catch (error) {
       toast.error("Failed to add item!");
     }
@@ -69,15 +60,19 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ isOpen, onClose, onSubmit
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!item?._id) {
-      console.error("No item ID provided for update.");
+    if (!item || !item._id) {
+      toast.error("Invalid item ID for update.");
       return;
     }
     try {
       const response = await axios.put(`https://inventory-management-system-backend-6.onrender.com/api/inventory/${item._id}`, formData);
-      setInventory((prev) => prev.map((inv) => (inv._id === item._id ? response.data : inv)));
-      toast.success("Inventory item updated successfully!");
-      onClose();
+      if (response.data && response.data._id) {
+        setInventory((prev) => prev.map((inv) => (inv._id === item._id ? response.data : inv)));
+        toast.success("Inventory item updated successfully!");
+        onClose();
+      } else {
+        throw new Error("Invalid response data");
+      }
     } catch (error) {
       toast.error("Failed to update item!");
     }
@@ -101,6 +96,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ isOpen, onClose, onSubmit
               required
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium">Status</label>
             <select name="status" value={formData.status} onChange={handleChange} className="w-full px-3 py-2 border rounded-lg">
@@ -109,6 +105,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ isOpen, onClose, onSubmit
               <option value="Overdue">Overdue</option>
             </select>
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium">Condition</label>
             <select name="condition" value={formData.condition} onChange={handleChange} className="w-full px-3 py-2 border rounded-lg">
@@ -117,19 +114,37 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ isOpen, onClose, onSubmit
               <option value="Damaged">Damaged</option>
             </select>
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium">Borrower (Optional)</label>
-            <input type="text" name="borrower" value={formData.borrower} onChange={handleChange} className="w-full px-3 py-2 border rounded-lg" />
+            <input
+              type="text"
+              name="borrower"
+              value={formData.borrower}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg"
+            />
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium">Due Date (Optional)</label>
-            <input type="date" name="dueDate" value={formData.dueDate} onChange={handleChange} className="w-full px-3 py-2 border rounded-lg" />
+            <input
+              type="date"
+              name="dueDate"
+              value={formData.dueDate}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg"
+            />
           </div>
+
           <div className="flex justify-end space-x-4">
             <button type="button" onClick={onClose} className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
               Cancel
             </button>
-            <button type="submit" className={item ? "bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600" : "bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"}>
+            <button
+              type="submit"
+              className={item ? "bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600" : "bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"}
+            >
               {item ? "Update Item" : "Add Item"}
             </button>
           </div>

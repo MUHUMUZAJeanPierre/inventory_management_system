@@ -4,7 +4,6 @@ import {
   FaBars, FaTimes, FaHome, FaQuestion, 
   FaGraduationCap, FaChalkboardTeacher, FaHeadset, FaUserCog
 } from "react-icons/fa";
-
 // Define user prop types
 interface User {
   name?: string;

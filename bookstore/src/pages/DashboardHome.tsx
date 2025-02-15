@@ -156,7 +156,7 @@ const DashboardHome = () => {
                   </button>
                   {item.status === "Damaged" ? (
                     <button className="text-green-500 hover:text-green-700">
-                      <FaTools /> {/* Repair */}
+                      <FaTools /> 
                     </button>
                   ) : item.status === "Overdue" ? (
                     <button className="text-red-500 hover:text-red-700">

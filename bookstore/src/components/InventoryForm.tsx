@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 
 const InventoryForm = ({ isOpen, onClose, onSubmit, item, setInventory }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +12,7 @@ const InventoryForm = ({ isOpen, onClose, onSubmit, item, setInventory }) => {
     borrower: "",
     dueDate: "",
   });
+  const navigate = useNavigate();
 
   // Populate form for editing
   useEffect(() => {
@@ -42,10 +46,15 @@ const InventoryForm = ({ isOpen, onClose, onSubmit, item, setInventory }) => {
     try {
       const response = await axios.post("https://inventory-management-system-backend-6.onrender.com/api/inventory", formData);
       setInventory((prev) => [...prev, response.data]);
-      console.log("Item added:", response.data);
+      setTimeout(()=>{
+        alert("Inventory item added successfully!");
+        toast.success("Inventory item added successfully!");
+        navigate("/inventory");
+      }, 3000)
       onClose();
     } catch (error) {
-      console.error("Error adding item:", error);
+      alert("Failed to add item!");
+      toast.error("Failed to add item!");
     }
   };
 
@@ -59,23 +68,23 @@ const InventoryForm = ({ isOpen, onClose, onSubmit, item, setInventory }) => {
     try {
       const response = await axios.put(`https://inventory-management-system-backend-6.onrender.com/api/inventory/${item.id}`, {
         ...formData,
-        id: item.id, // Ensure the API gets the item ID
+        id: item.id, 
       });
 
       setInventory((prev) =>
         prev.map((inv) => (inv.id === item.id ? response.data : inv))
       );
-      console.log("Item updated:", response.data);
+      toast.success("Inventory item updated successfully!");
       onClose();
     } catch (error) {
-      console.error("Error updating item:", error);
+      toast.error("Failed to update item!");
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center  py-10">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-lg font-semibold mb-4">{item ? "Edit Item" : "Add New Item"}</h2>
         <form>
@@ -169,3 +178,4 @@ const InventoryForm = ({ isOpen, onClose, onSubmit, item, setInventory }) => {
 };
 
 export default InventoryForm;
+

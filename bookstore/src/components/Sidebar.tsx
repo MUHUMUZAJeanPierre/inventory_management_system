@@ -10,8 +10,8 @@ const Sidebar = ({ user }) => {
 
   // Menu items based on user role
   const menuItems = [
-    { path: "/", label: "Inventory Manager", icon: <FaHome /> },
-    { path: "/about", label: "Record Item", icon: <FaQuestion /> },
+    { path: "/inventory", label: "Inventory Manager", icon: <FaHome /> },
+    { path: "/record", label: "Record Item", icon: <FaQuestion /> },
     { path: "/contact", label: "Contact Us", icon: <FaHeadset /> },
   ];
 

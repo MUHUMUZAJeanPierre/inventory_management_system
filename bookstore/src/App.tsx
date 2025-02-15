@@ -37,15 +37,14 @@ import DashboardHome from "./pages/DashboardHome";
 import DashboardAbout from "./pages/DashboardAbout";
 import InventoryForm from "./components/InventoryForm";
 
-
 function App() {
   return (
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<DashboardHome />} />
-          <Route path="/about" element={<DashboardAbout />} />
-          <Route path="/" element={<InventoryForm />} />
+          <Route path="/inventory" element={<DashboardHome />} />
+          <Route path="/record" element={<DashboardAbout />} />
+          <Route path="/inventory-form" element={<InventoryForm />} />
           {/* <Route path="/courses" element={<Home />} /> */}
         </Routes>
       </Layout>

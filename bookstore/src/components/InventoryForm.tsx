@@ -40,7 +40,7 @@ const InventoryForm = ({ isOpen, onClose, onSubmit, item, setInventory }) => {
   const handleAdd = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://inventory-management-system-backend-4.onrender.com/api/inventory", formData);
+      const response = await axios.post("https://inventory-management-system-backend-6.onrender.com/api/inventory", formData);
       setInventory((prev) => [...prev, response.data]);
       console.log("Item added:", response.data);
       onClose();
@@ -57,7 +57,7 @@ const InventoryForm = ({ isOpen, onClose, onSubmit, item, setInventory }) => {
       return;
     }
     try {
-      const response = await axios.put(`http://localhost:5000/api/inventory/${item.id}`, {
+      const response = await axios.put(`https://inventory-management-system-backend-6.onrender.com/api/inventory/${item.id}`, {
         ...formData,
         id: item.id, // Ensure the API gets the item ID
       });

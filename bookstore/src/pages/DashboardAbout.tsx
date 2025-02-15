@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { FaEye, FaEdit, FaTrash, FaTools, FaUndo, FaPlus } from "react-icons/fa";
 import InventoryForm from "../components/InventoryForm";
 import axios from "axios";
 import { Card, CardBody, CardTitle, Container, Row } from "reactstrap";

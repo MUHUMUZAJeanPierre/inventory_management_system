@@ -1,12 +1,9 @@
 import React from "react";
-// import HeroSlider from "../components/HeroSlider";
-// import HeroSlider from "./HeroSlider";
-
 const About: React.FC = () => {
   return (
     <section className="bg-[#F3F2EC] py-16 px-8 md:px-20">
       <div className="container mx-auto flex flex-col md:flex-row items-center space-y-10 md:space-y-0 md:space-x-12">
-        {/* Left - About Content */}
+
         <div className="max-w-lg text-center md:text-left">
           <h2 className="text-4xl font-bold text-gray-800 font-sans">About Us</h2>
           <p className="mt-4 text-gray-600 text-lg">
@@ -19,7 +16,6 @@ const About: React.FC = () => {
           </button>
         </div>
 
-        {/* Right - Hero Slider */}
         <div className="w-full md:w-1/2">
         </div>
       </div>

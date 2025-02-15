@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaEye, FaEdit, FaTrash, FaTools, FaUndo, FaPlus } from "react-icons/fa";
+import { FaEye, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import InventoryForm from "../components/InventoryForm";
 import axios from "axios";
 

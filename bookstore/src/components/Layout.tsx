@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import TopNavigation from "./TopNavigation";
-import Dashboard from "./Dashboard";
 
 const Layout = ({children}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -15,9 +14,6 @@ const Layout = ({children}) => {
       />
       <div className="flex min-h-screen bg-gray-100">
         <Sidebar isOpen={isSidebarOpen} />
-        {/* <main className="flex-1 p-4">
-          <Dashboard />
-        </main> */}
         <div className="flex-1 p-5 pt-10 md:ml-64">
         {children}
       </div>

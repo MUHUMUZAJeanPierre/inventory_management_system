@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
   FaBars, FaTimes, FaHome, FaQuestion, 
@@ -8,7 +8,6 @@ import {
 const Sidebar = ({ user }) => {
   const [isOpen, setIsOpen] = useState(true);
 
-  // Menu items based on user role
   const menuItems = [
     { path: "/inventory", label: "Inventory Manager", icon: <FaHome /> },
     { path: "/record", label: "Record Item", icon: <FaQuestion /> },
@@ -38,7 +37,6 @@ const Sidebar = ({ user }) => {
 
       <div className={`fixed top-0 left-0 h-full bg-gray-900 text-white shadow-lg w-64 p-4 transition-transform transform ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:w-64 z-40`}>
 
-        {/* User Profile Section */}
         <div className="text-center my-6 flex flex-col items-center">
           <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-blue-500 bg-gray-700 flex items-center justify-center">
             {user?.profilePic ? (
@@ -54,7 +52,6 @@ const Sidebar = ({ user }) => {
           </Link>
         </div>
 
-        {/* Navigation Menu */}
         <nav className="flex flex-col space-y-4">
           {menuItems.map((item, index) => (
             <Link key={index} to={item.path} className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-800 rounded transition">

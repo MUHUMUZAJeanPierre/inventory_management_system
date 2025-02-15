@@ -3,13 +3,22 @@ import { FaEye, FaEdit, FaTrash, FaTools, FaUndo, FaPlus } from "react-icons/fa"
 import InventoryForm from "../components/InventoryForm";
 import axios from "axios";
 
+interface InventoryItem {
+  _id: string;
+  name: string;
+  status: string;
+  condition: string;
+  borrower?: string | null;
+  dueDate?: string | null;
+}
+
 const itemsPerPage = 4;
 
 const DashboardHome = () => {
-  const [inventory, setInventory] = useState([]);
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
+  const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,13 +28,12 @@ const DashboardHome = () => {
         setTimeout(() => {
           setInventory(response.data.data);
           setLoading(false);
-        }, 3000); // Simulating 3 seconds loading time
+        }, 3000);
       } catch (error) {
         console.error("Error fetching inventory:", error);
         setLoading(false);
       }
     };
-
     fetchInventory();
   }, []);
 
@@ -45,12 +53,12 @@ const DashboardHome = () => {
     setIsFormOpen(true);
   };
 
-  const openEditForm = (item) => {
+  const openEditForm = (item: InventoryItem) => {
     setEditingItem(item);
     setIsFormOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
 
     try {
@@ -112,7 +120,6 @@ const DashboardHome = () => {
           </tbody>
         </table>
       </div>
-
       <div className="mt-4 flex justify-center space-x-2">
         <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50">Previous</button>
         {Array.from({ length: totalPages }, (_, index) => (
@@ -120,7 +127,6 @@ const DashboardHome = () => {
         ))}
         <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50">Next</button>
       </div>
-
       <InventoryForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} item={editingItem} />
     </div>
   );

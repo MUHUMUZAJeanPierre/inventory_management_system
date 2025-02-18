@@ -4,11 +4,10 @@ import axios from "axios";
 import { Card, CardBody, CardTitle, Container, Row } from "reactstrap";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from "chart.js";
-import { useTheme } from "../context/ThemeContext"; // Import theme context
+import { useTheme } from "../context/ThemeContext"; 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
-// ✅ Define Inventory Item Type
 interface InventoryItem {
   _id: string;
   name: string;
@@ -18,7 +17,6 @@ interface InventoryItem {
   dueDate?: string;
 }
 
-// ✅ Define Statistics Type
 interface InventoryStats {
   total: number;
   assigned: number;
@@ -27,14 +25,13 @@ interface InventoryStats {
 }
 
 const DashboardAbout: React.FC = () => {
-  const { darkMode } = useTheme(); // Get dark mode state
+  const { darkMode } = useTheme(); 
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [stats, setStats] = useState<InventoryStats>({ total: 0, assigned: 0, damaged: 0, overdue: 0 });
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // ✅ Fetch Inventory Data
   useEffect(() => {
     const fetchInventory = async () => {
       try {
@@ -69,7 +66,6 @@ const DashboardAbout: React.FC = () => {
     );
   }
 
-  // ✅ Prepare Chart Data
   const chartData = {
     labels: ["Total Items", "Assigned Items", "Damaged Items", "Overdue Returns"],
     datasets: [
@@ -77,13 +73,12 @@ const DashboardAbout: React.FC = () => {
         label: "Inventory Statistics",
         data: [stats.total, stats.assigned, stats.damaged, stats.overdue],
         backgroundColor: darkMode
-          ? ["#d1d5db", "#facc15", "#ef4444", "#10b981"] // Adjusted for dark mode
+          ? ["#d1d5db", "#facc15", "#ef4444", "#10b981"] 
           : ["#6b7280", "#facc15", "#ef4444", "#10b981"],
       },
     ],
   };
 
-  // ✅ Define Colors for Cards
   const cardColors: Record<string, string> = {
     total: darkMode ? "bg-gray-800" : "bg-gray-700",
     assigned: "bg-yellow-500",
@@ -102,7 +97,6 @@ const DashboardAbout: React.FC = () => {
           <div className="header-body">
             <div className="mb-6 flex flex-col md:flex-row justify-center items-center space-x-4">
               
-              {/* ✅ Pie Chart */}
               <div className="w-full md:w-1/3 h-[300px]">
                 <Pie
                   data={chartData}
@@ -118,7 +112,6 @@ const DashboardAbout: React.FC = () => {
                 />
               </div>
 
-              {/* ✅ Bar Chart */}
               <div className="w-full md:w-2/3 h-[300px]">
                 <Bar
                   data={chartData}
@@ -150,7 +143,6 @@ const DashboardAbout: React.FC = () => {
               </div>
             </div>
 
-            {/* ✅ Statistics Cards */}
             <Row className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
               {Object.entries(stats).map(([key, value], index) => (
                 <Card
@@ -186,7 +178,6 @@ const DashboardAbout: React.FC = () => {
         </Container>
       </div>
 
-      {/* ✅ Inventory Form Modal */}
       <InventoryForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} item={editingItem} setInventory={setInventory} />
     </div>
   );

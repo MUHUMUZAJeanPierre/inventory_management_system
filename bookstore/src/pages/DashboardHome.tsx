@@ -4,7 +4,6 @@ import InventoryForm from "../components/InventoryForm";
 import axios from "axios";
 import { useTheme } from "../context/ThemeContext"; // Import Theme Context
 
-// ✅ Define Inventory Item Type
 interface InventoryItem {
   _id: string; 
   name: string;
@@ -17,7 +16,7 @@ interface InventoryItem {
 const itemsPerPage = 4;
 
 const DashboardHome: React.FC = () => {
-  const { darkMode } = useTheme(); // Get dark mode state
+  const { darkMode } = useTheme(); 
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
@@ -40,26 +39,22 @@ const DashboardHome: React.FC = () => {
     fetchInventory();
   }, []);
 
-  // ✅ Optimize Pagination Calculation with useMemo
   const totalPages = useMemo(() => Math.ceil(inventory.length / itemsPerPage), [inventory.length]);
   const paginatedData = useMemo(
     () => inventory.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
     [inventory, currentPage]
   );
 
-  // ✅ Open Inventory Form for Adding a New Item
   const openCreateForm = useCallback(() => {
     setEditingItem(null);
     setIsFormOpen(true);
   }, []);
 
-  // ✅ Open Inventory Form for Editing an Existing Item
   const openEditForm = useCallback((item: InventoryItem) => {
     setEditingItem(item);
     setIsFormOpen(true);
   }, []);
 
-  // ✅ Handle Item Deletion
   const handleDelete = useCallback(async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
     try {
@@ -82,7 +77,6 @@ const DashboardHome: React.FC = () => {
     <div className={`container mx-auto px-4 py-8 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
       <div className="shadow-lg rounded-lg overflow-hidden">
         
-        {/* ✅ Header Section */}
         <div className={`px-6 py-4 border-b flex justify-between items-center ${darkMode ? "border-gray-700" : "border-gray-200"}`}>
           <h3 className="text-lg font-semibold">Inventory Overview</h3>
           <button
@@ -93,7 +87,6 @@ const DashboardHome: React.FC = () => {
           </button>
         </div>
 
-        {/* ✅ Inventory Table */}
         <table className="w-full text-left">
           <thead className={`${darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-700"}`}>
             <tr>
@@ -140,7 +133,6 @@ const DashboardHome: React.FC = () => {
         </table>
       </div>
 
-      {/* ✅ Pagination Controls */}
       <div className="mt-4 flex justify-center space-x-2">
         <button 
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
@@ -169,7 +161,6 @@ const DashboardHome: React.FC = () => {
         </button>
       </div>
 
-      {/* ✅ Inventory Form Modal */}
       <InventoryForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} item={editingItem} setInventory={setInventory} />
     </div>
   );

@@ -4,12 +4,13 @@ import axios from "axios";
 import { Card, CardBody, CardTitle, Container, Row } from "reactstrap";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from "chart.js";
+import { useTheme } from "../context/ThemeContext"; // Import theme context
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 // ✅ Define Inventory Item Type
 interface InventoryItem {
-  _id: string; // Ensure `_id` is always required
+  _id: string;
   name: string;
   status: string;
   condition: string;
@@ -26,6 +27,7 @@ interface InventoryStats {
 }
 
 const DashboardAbout: React.FC = () => {
+  const { darkMode } = useTheme(); // Get dark mode state
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [stats, setStats] = useState<InventoryStats>({ total: 0, assigned: 0, damaged: 0, overdue: 0 });
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
@@ -61,7 +63,7 @@ const DashboardAbout: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className={`flex items-center justify-center h-screen ${darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-purple-500"></div>
       </div>
     );
@@ -74,34 +76,77 @@ const DashboardAbout: React.FC = () => {
       {
         label: "Inventory Statistics",
         data: [stats.total, stats.assigned, stats.damaged, stats.overdue],
-        backgroundColor: ["#6b7280", "#facc15", "#ef4444", "#10b981"],
+        backgroundColor: darkMode
+          ? ["#d1d5db", "#facc15", "#ef4444", "#10b981"] // Adjusted for dark mode
+          : ["#6b7280", "#facc15", "#ef4444", "#10b981"],
       },
     ],
   };
 
   // ✅ Define Colors for Cards
   const cardColors: Record<string, string> = {
-    total: "bg-gray-700",
+    total: darkMode ? "bg-gray-800" : "bg-gray-700",
     assigned: "bg-yellow-500",
     damaged: "bg-red-500",
     overdue: "bg-green-500",
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="header bg-gradient-to-r from-purple-500 to-teal-500 text-white mx-auto px-4 py-8 rounded-lg">
+    <div className={`container mx-auto px-4 py-8 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+      <div
+        className={`header mx-auto py-8 rounded-lg transition-all duration-300 ${
+          darkMode ? "bg-gradient-to-r from-gray-800 to-gray-700" : "bg-gradient-to-r from-purple-500 to-teal-500 text-white"
+        }`}
+      >
         <Container fluid>
           <div className="header-body">
             <div className="mb-6 flex flex-col md:flex-row justify-center items-center space-x-4">
               
               {/* ✅ Pie Chart */}
               <div className="w-full md:w-1/3 h-[300px]">
-                <Pie data={chartData} options={{ maintainAspectRatio: false, responsive: true }} />
+                <Pie
+                  data={chartData}
+                  options={{
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        labels: { color: darkMode ? "white" : "black" },
+                      },
+                    },
+                  }}
+                />
               </div>
 
               {/* ✅ Bar Chart */}
               <div className="w-full md:w-2/3 h-[300px]">
-                <Bar data={chartData} options={{ maintainAspectRatio: false, responsive: true }} />
+                <Bar
+                  data={chartData}
+                  options={{
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        labels: { color: darkMode ? "white" : "black" },
+                      },
+                      title: {
+                        display: true,
+                        text: "Inventory Statistics",
+                        color: darkMode ? "white" : "black",
+                      },
+                    },
+                    scales: {
+                      x: {
+                        ticks: { color: darkMode ? "white" : "black" },
+                        grid: { color: darkMode ? "gray" : "rgba(0,0,0,0.1)" },
+                      },
+                      y: {
+                        ticks: { color: darkMode ? "white" : "black" },
+                        grid: { color: darkMode ? "gray" : "rgba(0,0,0,0.1)" },
+                      },
+                    },
+                  }}
+                />
               </div>
             </div>
 
@@ -142,12 +187,7 @@ const DashboardAbout: React.FC = () => {
       </div>
 
       {/* ✅ Inventory Form Modal */}
-      <InventoryForm
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        item={editingItem}
-        setInventory={setInventory}
-      />
+      <InventoryForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} item={editingItem} setInventory={setInventory} />
     </div>
   );
 };
